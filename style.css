@@ -1,0 +1,221 @@
+/* General Styles */
+body {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+    background-color: #f4f4f4; /* Light grey background */
+}
+
+main {
+    flex: 1 0 auto;
+    padding-top: 20px;
+    padding-bottom: 40px;
+}
+
+nav .brand-logo {
+    font-weight: bold;
+}
+
+/* Section Styling */
+.app-section {
+    margin-top: 30px;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.app-section h4, .app-section h5 {
+    color: #424242; /* Dark grey */
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+}
+
+.app-section h4 .title-icon,
+.app-section h5 .title-icon {
+    margin-right: 10px;
+    vertical-align: middle;
+    color: #1976d2; /* Materialize blue */
+}
+
+/* Hide sections by default (JS will show the active one) */
+.app-section.hide {
+    display: none;
+}
+
+/* Navbar Active Link */
+nav ul a.active {
+    background-color: rgba(0, 0, 0, 0.1);
+    font-weight: bold;
+}
+
+/* Sidenav Active Link */
+.sidenav li > a.active {
+    font-weight: bold;
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* Dashboard Styles */
+.dashboard-count {
+    font-size: 2.5rem;
+    font-weight: 300;
+    text-align: right;
+    margin-top: 0;
+}
+
+.card .card-title i {
+    vertical-align: middle;
+    margin-right: 5px;
+    font-size: 1.8rem; /* Adjust icon size in card titles */
+}
+
+#priority-tasks-list .collection-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#priority-tasks-list .task-details {
+    flex-grow: 1;
+    margin-right: 15px;
+}
+
+#priority-tasks-list .task-actions button {
+    margin-left: 5px;
+}
+
+/* Table Styles */
+table thead th {
+    color: #0d47a1; /* Darker blue for headers */
+}
+
+.responsive-table td, .responsive-table th {
+    white-space: nowrap; /* Prevent text wrapping initially */
+}
+
+/* Action Buttons in Tables */
+.action-btn {
+    margin: 0 3px; /* Spacing between action icons */
+    cursor: pointer;
+    color: #ffffff; /* Materialize blue */
+    vertical-align: middle;
+}
+
+.action-btn:hover {
+    color: #0d47a1; /* Darker blue on hover */
+}
+
+.action-btn.delete {
+    color: #d32f2f; /* Red for delete */
+}
+.action-btn.delete:hover {
+    color: #b71c1c;
+}
+
+/* Modal Styles */
+.modal {
+    max-height: 85%; /* Default max height */
+}
+
+.modal h4 {
+    margin-bottom: 25px;
+    color: #1976d2;
+    font-size: 1.8rem;
+}
+
+.modal .modal-footer {
+    background-color: #f9f9f9;
+}
+
+.modal .modal-footer .btn-flat i,
+.modal .modal-footer .btn i {
+    vertical-align: middle;
+    line-height: inherit; /* Align icons better in buttons */
+}
+
+/* Form Styles */
+.filter-controls {
+    margin-bottom: 20px;
+    padding: 15px;
+    background-color: #e3f2fd; /* Light blue background */
+    border-radius: 4px;
+}
+
+.filter-controls .input-field {
+    margin-top: 0; /* Adjust spacing */
+}
+
+.risk-section {
+    padding: 15px;
+    margin-top: 20px;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+}
+
+.risk-output {
+    margin-top: 15px;
+    font-size: 1.5rem;
+}
+
+/* Loading Indicator */
+#loading-indicator {
+    position: fixed; /* Or absolute relative to main */
+    top: 64px; /* Below navbar */
+    left: 0;
+    width: 100%;
+    z-index: 1001; /* Above other content */
+    margin: 0;
+}
+
+/* Utility Classes */
+.hide {
+    display: none !important;
+}
+
+.center-align {
+    text-align: center;
+}
+
+/* --- Responsive Design (Mobile-First Approach) --- */
+
+/* Base styles (Mobile) are default */
+
+/* Tablets (and larger mobiles) */
+@media only screen and (min-width: 601px) {
+    .container {
+        /*width: 85%; */
+        width: -webkit-fill-available;
+    }
+
+    .modal {
+       /* width: 70%; /* Wider modals on tablets */
+        width: -webkit-fill-available;
+    }
+
+     .responsive-table td, .responsive-table th {
+        white-space: normal; /* Allow wrapping on larger screens */
+    }
+}
+
+/* Laptops/Desktops */
+@media only screen and (min-width: 993px) {
+    .container {
+        width: 75%;
+    }
+
+    .modal {
+        width: 60%; /* Wider modals on desktops */
+    }
+
+    nav .brand-logo {
+        margin-left: 15px; /* Add some margin for the logo */
+    }
+}
+
+/* Larger Desktops */
+@media only screen and (min-width: 1201px) {
+    .container {
+        width: 70%; /* Max width */
+    }
+}
