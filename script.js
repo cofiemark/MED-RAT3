@@ -109,7 +109,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({ action: action, data: data }),
-                // redirect: 'follow', // GAS doPost often involves redirects
+                redirect: 'follow', // GAS doPost often involves redirects
             });
 
              // Handle potential opaque redirect (common with GAS doPost)
