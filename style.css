@@ -177,6 +177,11 @@ table thead th {
     text-align: center;
 }
 
+
+.blue-grey.darken-1 {
+    background-color: #F44336 !important;
+}
+
 /* --- Responsive Design (Mobile-First Approach) --- */
 
 /* Base styles (Mobile) are default */
