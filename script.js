@@ -63,41 +63,35 @@ document.addEventListener('DOMContentLoaded', () => {
      * @returns {Promise<any>} - The data array from the response.
      */
     // Unified fetchData for both GET and POST with CORS-safe handling
-async function fetchData(url, options = {}) {
-try {
-const finalOptions = {
-method: options.method || "GET",
-headers: {
-"Content-Type": "application/json",
-...(options.headers || {}),
-},
-mode: "cors", // ensures browser treats it as a cross-origin call
-redirect: "follow", // avoid opaque redirects
-body: options.body ? JSON.stringify(options.body) : undefined,
-};
+    async function fetchData(action, params = {}) {
+        showLoading();
+        const url = new URL(GAS_URL);
+        url.searchParams.append('action', action);
+        for (const key in params) {
+            if (params[key]) { // Only add if value is not empty/null
+                 url.searchParams.append(key, params[key]);
+            }
+        }
 
-
-const response = await fetch(url, finalOptions);
-
-
-// handle non-200 responses explicitly
-if (!response.ok) {
-throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-}
-
-
-// try parsing JSON safely
-const text = await response.text();
-try {
-return JSON.parse(text);
-} catch (err) {
-throw new Error("Failed to parse JSON response: " + text);
-}
-} catch (err) {
-console.error("fetchData error:", err);
-throw err;
-}
-}
+        try {
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const result = await response.json();
+            if (result.status === 'error') {
+                throw new Error(`GAS Error: ${result.message}`);
+            }
+            // console.log(`Fetched ${action}:`, result.data); // Debug log
+            return result.data;
+        } catch (error) {
+            console.error(`Error fetching ${action}:`, error);
+            M.toast({ html: `Error fetching ${action}: ${error.message}`, classes: 'red darken-1' });
+            return []; // Return empty array on error
+        } finally {
+            hideLoading();
+        }
+    }
 
      /**
      * Generic function to post data to the Google Apps Script.
