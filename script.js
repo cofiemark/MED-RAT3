@@ -62,35 +62,42 @@ document.addEventListener('DOMContentLoaded', () => {
      * @param {object} [params={}] - Optional additional URL parameters.
      * @returns {Promise<any>} - The data array from the response.
      */
-    async function fetchData(action, params = {}) {
-        showLoading();
-        const url = new URL(GAS_URL);
-        url.searchParams.append('action', action);
-        for (const key in params) {
-            if (params[key]) { // Only add if value is not empty/null
-                 url.searchParams.append(key, params[key]);
-            }
-        }
+    // Unified fetchData for both GET and POST with CORS-safe handling
+async function fetchData(url, options = {}) {
+try {
+const finalOptions = {
+method: options.method || "GET",
+headers: {
+"Content-Type": "application/json",
+...(options.headers || {}),
+},
+mode: "cors", // ensures browser treats it as a cross-origin call
+redirect: "follow", // avoid opaque redirects
+body: options.body ? JSON.stringify(options.body) : undefined,
+};
 
-        try {
-            const response = await fetch(url);
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            const result = await response.json();
-            if (result.status === 'error') {
-                throw new Error(`GAS Error: ${result.message}`);
-            }
-            // console.log(`Fetched ${action}:`, result.data); // Debug log
-            return result.data;
-        } catch (error) {
-            console.error(`Error fetching ${action}:`, error);
-            M.toast({ html: `Error fetching ${action}: ${error.message}`, classes: 'red darken-1' });
-            return []; // Return empty array on error
-        } finally {
-            hideLoading();
-        }
-    }
+
+const response = await fetch(url, finalOptions);
+
+
+// handle non-200 responses explicitly
+if (!response.ok) {
+throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+}
+
+
+// try parsing JSON safely
+const text = await response.text();
+try {
+return JSON.parse(text);
+} catch (err) {
+throw new Error("Failed to parse JSON response: " + text);
+}
+} catch (err) {
+console.error("fetchData error:", err);
+throw err;
+}
+}
 
      /**
      * Generic function to post data to the Google Apps Script.
@@ -98,51 +105,40 @@ document.addEventListener('DOMContentLoaded', () => {
      * @param {object} data - The data payload to send.
      * @returns {Promise<any>} - The JSON response from the script.
      */
-    async function postData(action, data) {
-        showLoading();
-        try {
-            const response = await fetch(GAS_URL, {
-                method: 'POST',
-                mode: 'cors', // Required for cross-origin requests to GAS web apps
-                cache: 'no-cache',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ action: action, data: data }),
-                redirect: 'follow', // GAS doPost often involves redirects
-            });
+    
+    // Updated postData to handle JSON reliably with GAS + CORS
+async function postData(action, data) {
+  try {
+    const response = await fetch(apiBaseUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ action, data }),
+      redirect: "follow", // Explicitly follow redirects to avoid opaque responses
+      mode: "cors",       // Ensure CORS mode is set
+      cache: "no-cache",
+    });
 
-             // Handle potential opaque redirect (common with GAS doPost)
-             if (response.type === 'opaque' || response.redirected) {
-                 // Cannot read response body directly after redirect
-                 // Assume success if no network error, but might need refinement
-                 console.warn(`POST request for ${action} resulted in an opaque redirect. Assuming success.`);
-                 hideLoading();
-                 // Return a generic success structure, as we can't read the actual one
-                 return { status: 'success', message: `${action} submitted. Response details unavailable due to redirect.` };
-             }
-
-
-            if (!response.ok) {
-                 // Try to get error details if possible
-                 let errorBody = 'Could not retrieve error details.';
-                 try {
-                     errorBody = await response.text(); // Use text() first
-                 } catch (e) { /* ignore */ }
-                throw new Error(`HTTP error! status: ${response.status}, Body: ${errorBody}`);
-            }
-
-            const result = await response.json();
-            // console.log(`Posted ${action}:`, result); // Debug log
-            return result;
-        } catch (error) {
-            console.error(`Error posting ${action}:`, error);
-            M.toast({ html: `Error posting ${action}: ${error.message}`, classes: 'red darken-1' });
-            throw error; // Re-throw to be caught by caller if needed
-        } finally {
-            hideLoading();
-        }
+    // Check for HTTP-level issues
+    if (!response.ok) {
+      throw new Error(`HTTP error ${response.status}: ${response.statusText}`);
     }
+
+    // Attempt to parse JSON response
+    const text = await response.text();
+    try {
+      return JSON.parse(text);
+    } catch (parseErr) {
+      console.error("Failed to parse JSON:", text);
+      throw new Error("Invalid JSON response from server");
+    }
+  } catch (error) {
+    console.error("Error in postData:", error);
+    return { status: "error", message: error.message };
+  }
+}
+
 
     /**
      * Calculates RPN based on L, S, D values. Matches Apps Script logic.
