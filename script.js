@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     // --- Constants and State ---
-    const GAS_URL = 'https://script.google.com/macros/s/AKfycbylvHybTyOdwb6m-rbvLuwv61gBQG0-QCLbtTO5hrsnt5f8HOVwrTeKqS1j3AjyUiatNA/exec'; // <-- REPLACE THIS WITH YOUR DEPLOYED URL
+    const GAS_URL = 'https://script.google.com/macros/s/AKfycbxh2lwdMricpL9nqukadBUXgMnGsU0dbC5xh_tfMUT_T_lc4KT2JU7epDXoJ6hDPuGLCg/exec'; // <-- REPLACE THIS WITH YOUR DEPLOYED URL
     let allEquipment = []; // Cache for equipment data
     let allTechnicians = []; // Cache for technician data
 
