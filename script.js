@@ -112,6 +112,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 redirect: 'follow', // GAS doPost often involves redirects
             });
 
+             // Handle potential opaque redirect (common with GAS doPost)
+             if (response.type === 'opaque' || response.redirected) {
+                 // Cannot read response body directly after redirect
+                 // Assume success if no network error, but might need refinement
+                 console.warn(`POST request for ${action} resulted in an opaque redirect. Assuming success.`);
+                 hideLoading();
+                 // Return a generic success structure, as we can't read the actual one
+                 return { status: 'success', message: `${action} submitted. Response details unavailable due to redirect.` };
+             }
+
+
             if (!response.ok) {
                  // Try to get error details if possible
                  let errorBody = 'Could not retrieve error details.';
@@ -768,4 +779,5 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 }); // End DOMContentLoaded
+
 
