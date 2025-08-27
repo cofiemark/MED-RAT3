@@ -98,7 +98,7 @@ table thead th {
 .action-btn {
     margin: 0 3px; /* Spacing between action icons */
     cursor: pointer;
-    color: #000000; /* Materialize blue */
+    color: #ffffff; /* Materialize blue */
     vertical-align: middle;
 }
 
@@ -224,3 +224,4 @@ table thead th {
         width: 70%; /* Max width */
     }
 }
+
