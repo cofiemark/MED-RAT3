@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     // --- Constants and State ---
-    const GAS_URL = 'https://script.google.com/macros/s/AKfycbyollH1ZlYoWw8NyBPHV4SDs65WC2g-KoI1L8KwEZ4uxaqb1RfX7RrDIW-TZ4Cw49KFtw/exec'; // <-- REPLACE THIS WITH YOUR DEPLOYED URL
+    const GAS_URL = 'https://script.google.com/macros/s/AKfycbwUTOaUUGWCD1nYn4ghChYoWv-Jpu3qDmllOKp5KJ3ratUf_XGfQcN4ZykMrhbGdYpiTQ/exec'; // <-- REPLACE THIS WITH YOUR DEPLOYED URL
     let allEquipment = []; // Cache for equipment data
     let allTechnicians = []; // Cache for technician data
 
@@ -109,7 +109,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({ action: action, data: data }),
-                redirect: 'follow', // GAS doPost often involves redirects
+                // redirect: 'follow', // GAS doPost often involves redirects
             });
 
              // Handle potential opaque redirect (common with GAS doPost)
@@ -779,3 +779,4 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 }); // End DOMContentLoaded
+
